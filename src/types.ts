@@ -1,6 +1,8 @@
+import { Themeable2 } from "@grafana/ui";
+
 export const funcParams = 'data, theme, echartsInstance, echarts';
 
-const funcBody = `const series = data.series.map((s) => {
+export const funcBody = `const series = data.series.map((s) => {
   const sData = s.fields.find((f) => f.type === 'number').values.buffer;
   const sTime = s.fields.find((f) => f.type === 'time').values.buffer;
 
@@ -71,19 +73,12 @@ return {
   series,
 };`;
 
-// const getOption = `function (${funcParams}) {
-//   ${funcBody}
-// }`
-// const funcBodyReg = /{\n([\S\s]*)\n}/;
-// const matchResult = getOption.match(funcBodyReg);
-// const funcBody = matchResult ? matchResult[1] : '';
-
-export interface SimpleOptions {
+export interface SimpleOptions extends Themeable2 {
   followTheme: boolean;
   getOption: string;
 }
 
-export const defaults: SimpleOptions = {
+export const defaults = {
   followTheme: false,
-  getOption: funcBody,
-};
+  getOption: funcBody
+}

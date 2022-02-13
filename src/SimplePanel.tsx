@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { PanelProps, GrafanaTheme } from '@grafana/data';
-import { withTheme } from '@grafana/ui';
+import { GrafanaTheme2, PanelProps } from '@grafana/data';
+import { Themeable2, useStyles2, useTheme2, withTheme2 } from '@grafana/ui';
 import { debounce } from 'lodash';
-import echarts from 'echarts';
-import { css, cx } from 'emotion';
+import * as echarts from 'echarts';
+import { css,  cx  } from '@emotion/css';
 import { SimpleOptions, funcParams } from 'types';
 
 // just comment it if don't need it
@@ -12,19 +12,9 @@ import 'echarts-liquidfill';
 import 'echarts-gl';
 
 // auto register map
-const maps = (require as any).context('./map', false, /\.json/);
-maps.keys().map((m: string) => {
-  const matched = m.match(/\.\/([0-9a-zA-Z_]*)\.json/);
-  if (matched) {
-    echarts.registerMap(matched[1], maps(m));
-  } else {
-    console.warn(
-      "Can't register map: JSON file Should be named according to the following rules: /([0-9a-zA-Z_]*).json/."
-    );
-  }
-});
+echarts.registerMap('china', require('map/china.json'));
 
-const getStyles = () => ({
+const getStyles = (theme: GrafanaTheme2) => ({
   tips: css`
     padding: 0 10%;
     height: 100%;
@@ -40,15 +30,14 @@ const getStyles = () => ({
   `,
 });
 
-interface Props extends PanelProps<SimpleOptions> {
-  theme: GrafanaTheme;
-}
+type Props = PanelProps<SimpleOptions> & Themeable2;
 
-const PartialSimplePanel: React.FC<Props> = ({ options, data, width, height, theme }) => {
-  const styles = getStyles();
+const PartialSimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
+  const styles = useStyles2(getStyles);
   const echartRef = useRef<HTMLDivElement>(null);
   const [chart, setChart] = useState<echarts.ECharts>();
   const [tips, setTips] = useState<Error | undefined>();
+  const theme = useTheme2();
 
   const resetOption = debounce(
     () => {
@@ -66,7 +55,7 @@ const PartialSimplePanel: React.FC<Props> = ({ options, data, width, height, the
         o && chart.setOption(o);
       } catch (err) {
         console.error('Editor content error!', err);
-        setTips(err);
+        setTips(err as Error);
       }
     },
     150,
@@ -75,14 +64,32 @@ const PartialSimplePanel: React.FC<Props> = ({ options, data, width, height, the
 
   useEffect(() => {
     if (echartRef.current) {
-      chart?.clear();
-      chart?.dispose();
-      setChart(echarts.init(echartRef.current, options.followTheme ? theme.type : undefined));
+
+      if (chart  && !chart.isDisposed) {
+        chart?.clear();
+        chart?.dispose();
+      }
+
+      let themeECharts = undefined;
+
+      if (options.followTheme) {
+        if (theme.isDark) {
+          themeECharts = 'dark';
+        }
+
+        if (theme.isLight) {
+          themeECharts = 'light';
+        }
+      }
+
+      setChart(echarts.init(echartRef.current, themeECharts, { renderer: 'svg' }));
     }
 
     return () => {
-      chart?.clear();
-      chart?.dispose();
+      if (chart  && !chart.isDisposed) {
+        chart?.clear();
+        chart?.dispose();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [echartRef.current, options.followTheme]);
@@ -121,4 +128,4 @@ const PartialSimplePanel: React.FC<Props> = ({ options, data, width, height, the
   );
 };
 
-export const SimplePanel = withTheme(PartialSimplePanel);
+export const SimplePanel = withTheme2(PartialSimplePanel);

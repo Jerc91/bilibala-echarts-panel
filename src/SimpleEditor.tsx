@@ -16,10 +16,8 @@ export class SimpleEditor extends PureComponent<PanelEditorProps<SimpleOptions>>
       <>
         <FieldEl
           label="Follow Grafana Theme"
-          description="Use default theme or follow theme of grafana (light or dark)."
-        >
+          description="Use default theme or follow theme of grafana (light or dark).">
           <Switch
-            css=""
             checked={this.props.options.followTheme}
             value={this.props.options.followTheme}
             onChange={e => this.onChange('followTheme', (e.target as HTMLInputElement).checked)}
@@ -27,8 +25,7 @@ export class SimpleEditor extends PureComponent<PanelEditorProps<SimpleOptions>>
         </FieldEl>
         <FieldEl
           label="Echarts Option"
-          description="Return options called by echarts or just use echartsInstance.setOption(...)."
-        >
+          description="Return options called by echarts or just use echartsInstance.setOption(...).">
           <FieldCMEditor value={this.props.options.getOption} onChange={v => this.onChange('getOption', v)} />
         </FieldEl>
       </>

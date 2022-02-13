@@ -4,6 +4,8 @@
   "compilerOptions": {
     "rootDir": "./src",
     "baseUrl": "./src",
-    "typeRoots": ["./node_modules/@types"]
+    "module": "esnext",
+    "typeRoots": ["./node_modules/@types"],
+    "target": "esnext"
   }
 }

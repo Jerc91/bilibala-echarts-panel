@@ -7,8 +7,8 @@
     "test": "grafana-toolkit plugin:test",
     "dev": "grafana-toolkit plugin:dev",
     "watch": "grafana-toolkit plugin:dev --watch",
-    "docker": "docker run -d --rm -p 3000:3000 -v \"$(pwd)\":/var/lib/grafana/plugins/grafana-echarts --name=grafana grafana/grafana",
-    "docker:6": "docker run -d --rm -p 3001:3000 -v \"$(pwd)\":/var/lib/grafana/plugins/grafana-echarts --name=grafana6 grafana/grafana:6.3.0",
+    "docker": "docker run -d --rm -p 3000:3000 -v \"%cd%\\dist\":/var/lib/grafana/plugins/bilibala-echarts-panel --env GF_DEFAULT_APP_MODE=development --env GF_SECURITY_ADMIN_PASSWORD=secret --name=\"grafana_echarts\" grafana/grafana",
+    "docker:6": "docker run -d --rm -p 3001:3000 -v \"${pwd}\":/var/lib/grafana/plugins/grafana-echarts --name=grafana grafana/grafana:6.3.0",
     "zip": "cp -R dist/ \"$npm_package_name\" && zip \"$npm_package_name\"-\"$npm_package_version\".zip \"$npm_package_name\" -r -m -x \"node_modules/*\" -x \".git/*\"",
     "md5": "md5 -r \"$npm_package_name\"-\"$npm_package_version\".zip>\"$npm_package_name\"-\"$npm_package_version\".zip.md5",
     "compress": "rm \"$npm_package_name\"* || true && npm run zip && npm run md5"
@@ -21,23 +21,25 @@
     "email": "wangqianxiang@outlook.com"
   },
   "devDependencies": {
-    "@grafana/data": "^7.3.0",
-    "@grafana/toolkit": "^7.3.0",
-    "@grafana/ui": "^7.3.0",
-    "@types/codemirror": "^0.0.100",
-    "@types/echarts": "^4.9.2",
-    "@types/lodash": "^4.14.165",
-    "emotion": "10.0.27"
+    "@emotion/css": "^11.7.1",
+    "@emotion/react": "^11.7.1",
+    "@grafana/data": "^8.3.4",
+    "@grafana/toolkit": "^8.3.4",
+    "@grafana/ui": "^8.3.4",
+    "@types/codemirror": "^5.60.5",
+    "@types/echarts": "^4.9.13",
+    "@types/lodash": "^4.14.178",
+    "emotion": "11.0.0"
   },
   "dependencies": {
-    "codemirror": "^5.58.3",
-    "echarts": "^4.9.0",
-    "echarts-gl": "^1.1.1",
-    "echarts-liquidfill": "^2.0.6",
-    "echarts-wordcloud": "^1.1.3",
-    "lodash": "^4.17.20"
+    "codemirror": "^5.65.1",
+    "echarts": "^5.3.0",
+    "echarts-gl": "^2.0.8",
+    "echarts-liquidfill": "^3.1.0",
+    "echarts-wordcloud": "^2.0.0",
+    "lodash": "^4.17.21"
   },
   "engines": {
-    "node": ">=12 <13"
+    "node": ">=12"
   }
 }
